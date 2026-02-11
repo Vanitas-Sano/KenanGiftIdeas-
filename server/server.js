@@ -1,13 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 const db = require('./database');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static frontend files in production
+app.use(express.static(path.join(__dirname, '../client/dist')));
 
 // Get all gifts
 app.get('/api/gifts', (req, res) => {
@@ -39,6 +43,11 @@ app.post('/api/gifts', (req, res) => {
             "data": { id: this.lastID, ...req.body }
         });
     });
+});
+
+// Catch-all: serve React app for any non-API route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 app.listen(PORT, () => {
