@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-const DBSOURCE = "gifts.db";
+const DBSOURCE = path.join(__dirname, 'gifts.db');
 
 let db = new sqlite3.Database(DBSOURCE, (err) => {
     if (err) {

@@ -11,7 +11,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Serve static frontend files in production
-app.use(express.static(path.join(__dirname, '../client/dist')));
+const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+app.use(express.static(clientDistPath));
 
 // Get all gifts
 app.get('/api/gifts', (req, res) => {
@@ -45,9 +46,9 @@ app.post('/api/gifts', (req, res) => {
     });
 });
 
-// Catch-all: serve React app for any non-API route
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+// Catch-all: serve React app for any non-API route (Express 5 syntax)
+app.get('/{*splat}', (req, res) => {
+    res.sendFile(path.join(clientDistPath, 'index.html'));
 });
 
 app.listen(PORT, () => {
